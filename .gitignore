@@ -1,0 +1,10 @@
+*.o
+*.exe
+bin/
+/TODO # file
+build/
+*.log
+.gradle/
+.settings/
+/.classpath
+/.project

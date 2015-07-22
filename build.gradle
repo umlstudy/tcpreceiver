@@ -1,0 +1,72 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+apply plugin: 'launch4j'
+
+
+mainClassName = 'com.sample.tcpreceiver.Main'
+
+project.group='com.sample'
+project.version = '1.0'
+archivesBaseName = "tcpreceiver"
+ 
+jar {
+    manifest {
+        attributes "Main-Class" : "$mainClassName"
+    }
+}
+
+System.setProperty('user.country', 'CA ')
+System.setProperty('user.language', 'fr ')
+launch4j {
+    mainClassName = "$mainClassName"
+    //icon = 'icons/myApp.ico'
+    //user.country=CA 
+    //user.language=fr
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'edu.sc.seis.gradle:launch4j:1.0.6'
+    }
+}
+
+repositories {
+	maven { url 'https://swt-repo.googlecode.com/svn/repo/' }
+	mavenLocal()
+	mavenCentral()
+}
+
+dependencies {
+}
+
+sourceCompatibility = 1.6
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+// source download
+eclipse {
+	classpath {
+	       downloadSources=true
+	       downloadJavadoc=true
+	}
+}
+
+task initProject(description: 'initialize project') << {
+    def createDir = {
+        println "create source directory: $it"
+        it.mkdirs()
+    }
+    sourceSets*.java.srcDirs*.each createDir
+    sourceSets*.resources.srcDirs*.each createDir
+}
+
+eclipseJdt << {
+    File f = file('.settings/org.eclipse.core.resources.prefs')
+    f.write('eclipse.preferences.version=1\n')
+    f.append('encoding/<project>=UTF-8')
+}
